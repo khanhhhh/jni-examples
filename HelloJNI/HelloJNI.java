@@ -1,6 +1,6 @@
 public class HelloJNI {
 	static {
-		System.loadLibrary("hello");
+		System.loadLibrary("HelloJNI");
 	}
 	private native void sayHello();
 
