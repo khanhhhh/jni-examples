@@ -1,5 +1,6 @@
 #include"CDouble.h"
 #include<string>
+#include<iostream>
 JNIEXPORT jlong JNICALL Java_CDouble_newDOUBLE(JNIEnv *env, jclass JThisObj, jdouble Jvalue) {
 	double *Obj = new double();
 	*Obj = static_cast<double>(Jvalue);
@@ -17,9 +18,9 @@ JNIEXPORT jstring JNICALL Java_CDouble_toStringDOUBLE(JNIEnv *env, jclass JThisO
 	auto JString = env->NewStringUTF(s.c_str());
 	return JString;
 }
-JNIEXPORT void JNICALL Java_CDouble_addDOUBLE(JNIEnv *env, jclass JThisObj, jlong JObj3, jlong JObj2, jlong JObj1) {
+JNIEXPORT void JNICALL Java_CDouble_addDOUBLE(JNIEnv *env, jclass JThisObj, jlong JObj1, jlong JObj2, jlong JObj3) {
 	double *Obj1 = reinterpret_cast<double*>(JObj1);
 	double *Obj2 = reinterpret_cast<double*>(JObj2);
-	double *Obj3 = reinterpret_cast<double*>(JObj2);
+	double *Obj3 = reinterpret_cast<double*>(JObj3);
 	*Obj3 = *Obj1 + *Obj2;
 }
