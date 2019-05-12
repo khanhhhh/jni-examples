@@ -10,12 +10,12 @@ public class main {
 			s2[i] = r.nextDouble();
 		}
 
-		JavaMatrix m1 = new JavaMatrix(size, size, s1);
-		JavaMatrix m2 = new JavaMatrix(size, size, s2);
+		Matrix m1 = new Matrix(size, size, s1);
+		Matrix m2 = new Matrix(size, size, s2);
 
 		long tic = System.nanoTime();
 
-		JavaMatrix m3 = JavaMatrix.multiplication(m1, m2);
+		Matrix m3 = Matrix.multiplication(m1, m2);
 
 		long toc = System.nanoTime();
 
