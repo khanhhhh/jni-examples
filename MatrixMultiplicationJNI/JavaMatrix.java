@@ -80,94 +80,19 @@ public class JavaMatrix {
 			return out;
 		}
 	}
-	// MATRIX MULTIPLICATION DIVIDE AND CONQUER
-	private JavaMatrix zeropad2n(int n) {
-		int dim = 1; for (int i=0; i<n; i++) dim *= 2;
-		if ((dim < height) || (dim < width)) {
-			throw new RuntimeException("ZeroPad failed!");
-		} else {
-			JavaMatrix out = new JavaMatrix(dim, dim);
-			for (int h=0; h<height; h++)
-			for (int w=0; w<width; w++)
-				out.set(h, w, get(h, w));
-			return out;
-		}
-	}
-	private static int round2n(int max) {
-		int n = 0; int dim = 1;
-		while (max > dim) {
-			n++;
-			dim *= 2;
-		}
-		return n;
-	}
-	private static int getmax3(int a, int b, int c) {
-		int max = a;
-		max = (max > b) ? max : b;
-		max = (max > c) ? max : c;
-		return max;
-	}
-	public static JavaMatrix matmul(JavaMatrix m1, JavaMatrix m2) {
+	public static JavaMatrix multiplication(JavaMatrix m1, JavaMatrix m2) {
 		if (m1.width != m2.height) {
-			throw new RuntimeException("Matmul wrong dimension!");
+			throw new RuntimeException("Multiplication wrong dimension!");
 		} else {
-			int max = getmax3(m1.height, m1.width, m2.width);
-			int n = round2n(max);
-			JavaMatrix out2n = matmul2n(m1.zeropad2n(n), m2.zeropad2n(n));
-			JavaMatrix out = out2n.index(0, m1.height, 0, m2.width);
+			JavaMatrix out = new JavaMatrix(m1.height, m2.width);
+			for (int h=0; h<m1.height; h++)
+			for (int w=0; w<m2.width; w++) {
+				double value = 0;
+				for (int x=0; x<m1.width; x++)
+					value += m1.get(h, x) * m2.get(x, w);
+				out.set(h, w, value);
+			}
 			return out;
-		}
-	}
-	// MATRIX MULTIPLICATION 2N IMPLEMENTATION
-	private JavaMatrix[] split4() {
-		int half = height/2;
-		JavaMatrix[] out = new JavaMatrix[4];
-		out[0] = index(0, half, 0, half);
-		out[1] = index(0, half, half, 2*half);
-		out[2] = index(half, 2*half, 0, half);
-		out[3] = index(half, 2*half, half, 2*half);
-		return out;
-	}
-	private static JavaMatrix merge4(JavaMatrix[] splits) {
-		int half = splits[0].height;
-		JavaMatrix out = new JavaMatrix(2*half, 2*half);
-		out.paste(0,0, splits[0]);
-		out.paste(0, half, splits[1]);
-		out.paste(half, 0, splits[2]);
-		out.paste(half, half, splits[3]);
-		return out;
-	}
-	private static JavaMatrix matmul2n(JavaMatrix m1, JavaMatrix m2) {
-		if (m1.height == 1) {
-			return new JavaMatrix(1, 1, new double[]{m1.get(0,0) * m2.get(0,0)});
-		} else {
-			JavaMatrix[] splits1 = m1.split4();
-			JavaMatrix[] splits2 = m2.split4();
-			JavaMatrix a = splits1[0];
-			JavaMatrix b = splits1[1];
-			JavaMatrix c = splits1[2];
-			JavaMatrix d = splits1[3];
-			JavaMatrix e = splits2[0];
-			JavaMatrix f = splits2[1];
-			JavaMatrix g = splits2[2];
-			JavaMatrix h = splits2[3];
-			JavaMatrix[] splitsOut = new JavaMatrix[4];
-			
-			// STRASSEN'S METHOD 
-			JavaMatrix p1 = matmul2n(a, subtraction(f, h));
-			JavaMatrix p2 = matmul2n(addition(a, b), h);
-			JavaMatrix p3 = matmul2n(addition(c, d), e);
-			JavaMatrix p4 = matmul2n(d, subtraction(g, e));
-			JavaMatrix p5 = matmul2n(addition(a, d), addition(e, h));
-			JavaMatrix p6 = matmul2n(subtraction(b, d), addition(g, h));
-			JavaMatrix p7 = matmul2n(subtraction(a, c), addition(e, f));
-
-			splitsOut[0] = addition(subtraction(addition(p5, p4), p2), p6);
-			splitsOut[1] = addition(p1, p2);
-			splitsOut[2] = addition(p3, p4);
-			splitsOut[3] = subtraction(subtraction(addition(p1, p5), p3), p7);
-
-			return merge4(splitsOut);
 		}
 	}
 }
