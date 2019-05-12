@@ -1,5 +1,7 @@
 # jni-examples
 
+https://www3.ntu.edu.sg/home/ehchua/programming/java/JavaNativeInterface.html
+
 1. Write JAVA files
 
 2. Compile JAVA files with javac
